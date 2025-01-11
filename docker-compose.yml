@@ -1,0 +1,44 @@
+# 使用之前将 xxxx 改成你的实际值
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: docker/server/Dockerfile
+    ports:
+      - "8080:8000"
+    restart: always
+    environment:
+      RUNENV: "prod"
+      MYSQL_HOST: "mysql"
+      MYSQL_PORT: "3306"
+      MYSQL_USERNAME: "xxxx"
+      MYSQL_PASSWORD: "xxxx"
+      MYSQL_DB_NAME: "xxxx"
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "xxxx"
+      TZ: "Asia/Shanghai"
+    volumes:
+      - .:/app
+
+  mysql:
+    build: docker/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "xxxx"
+      MYSQL_DATABASE: "xxxx"
+      MYSQL_USER: "xxxx"
+      MYSQL_PASSWORD: "xxxx"
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    restart: always
+    command: redis-server --requirepass xxxx
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./redis-data:/data
