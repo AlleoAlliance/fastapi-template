@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_concurrent_get_next_id():
     from concurrent.futures import ThreadPoolExecutor
     from threading import Lock
@@ -21,3 +24,13 @@ def test_concurrent_get_next_id():
     # 检查是否有重复 ID
     if len(id_list) != len(set(id_list)):
         raise ValueError(f'有重复 ID！重复数量: {len(id_list) - len(set(id_list))}')
+
+
+@pytest.mark.asyncio
+async def test_redis_clt(rds):
+    await rds.set('test_key', 'test_value', nx=1)
+    value = await rds.get('test_key')
+    assert value == 'test_value'
+    await rds.delete('test_key')
+    value = await rds.get('test_key')
+    assert value is None

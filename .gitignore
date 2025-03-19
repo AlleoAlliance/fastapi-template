@@ -42,6 +42,8 @@ local_demo
 mysql-data
 redis-data
 logs
+/.env.dev
+/.env.test
 /.env.prod
 test.db
 .ruff_cache

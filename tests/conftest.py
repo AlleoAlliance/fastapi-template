@@ -7,11 +7,10 @@ from faker.providers import BaseProvider
 from faker.proxy import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.testclient import TestClient
-from redis.asyncio import Redis, from_url
+from redis.asyncio import Redis
 from faker import Factory
 
 from tests.helpers import sql_migrate
-from config import settings
 from utils.connect import get_test_async_db
 
 
@@ -39,10 +38,12 @@ async def db() -> AsyncGenerator[AsyncSession, None]:
 
 @pytest.fixture(scope='session')
 async def rds() -> AsyncGenerator[Redis, None]:
-    """创建redis客户端"""
-    rc = from_url(settings.REDIS_URI, decode_responses=True)
-    yield rc
-    await rc.aclose()
+    """ "创建redis客户端"""
+    from utils.connect import get_async_redis_connection
+
+    clt = await get_async_redis_connection()
+    yield clt
+    await clt.aclose()
 
 
 @pytest.fixture(scope='module')

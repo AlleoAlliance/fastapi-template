@@ -1,6 +1,6 @@
 import os
 import sys
-from os.path import dirname, join
+from os.path import dirname, join, basename
 import json
 from typing import List
 
@@ -12,7 +12,7 @@ sys.path.append(join(__dirname, '..'))
 os.environ['IGNORE_SETTINGS'] = '1'
 
 from config_env import ENV_DIR, check_env_exists, CHANGE_THIS, ENVS  # noqa
-from config import Settings, get_settings  # noqa
+from config import get_settings_class, get_settings  # noqa
 
 
 def generate_dotenv(settings: BaseSettings, settings_class: BaseSettings) -> str:
@@ -62,7 +62,7 @@ def main(args: List[str] = None):
         settings = None
     for env_file in env_files:
         with open(env_file, 'w', encoding='utf8') as ef:
-            ef.write(generate_dotenv(settings, Settings))
+            ef.write(generate_dotenv(settings, get_settings_class(basename(env_file)[5:])))
             print(f'[+] 已生成 .env 文件: {env_file}')
 
 

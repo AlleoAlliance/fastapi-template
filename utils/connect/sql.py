@@ -12,7 +12,7 @@ async_engine = create_async_engine(
     settings.SQLALCHEMY_DATABASE_URI,
     pool_recycle=3600,  # 每小时回收连接
     pool_pre_ping=True,  # 启用连接检查
-    echo=not settings.IS_PROD,  # 是否打印SQL语句
+    echo=settings.IS_PRINT_SQL,  # 是否打印SQL语句
 )
 # 创建 AsyncSessionLocal 类，用于数据库会话管理
 AsyncSessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession)
@@ -37,7 +37,7 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
 async def get_test_async_db():
     DB_URI = settings.TEST_DATABASE_URL
     # 创建异步引擎
-    engine = create_async_engine(DB_URI, future=True, echo=not settings.IS_PROD and 0)
+    engine = create_async_engine(DB_URI, future=True, echo=settings.IS_PRINT_SQL)
     TestAsyncSession = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     async with TestAsyncSession() as async_session:
         # async with engine.begin() as conn:

@@ -30,19 +30,3 @@ alembic upgrade head
 # -1 表示降级一个版本
 alembic downgrade -1
 ```
-
-
-### 生成修订模板改进
-- 增加异步修订环境
-- 向修订文件中添加这两个函数，都会自动抓取并执行，参数 `db` 是 `sqlalchemy` 的 `AsyncSession` 对象
-
-```python
-from sqlalchemy.ext.asyncio import AsyncSession
-
-async def async_upgrade(db: AsyncSession):
-    pass
-
-
-async def async_downgrade(db: AsyncSession):
-    pass
-```
