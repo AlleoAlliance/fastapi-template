@@ -8,7 +8,8 @@ WORKDIR /app
 COPY . .
 
 # 安装项目依赖
-RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    python scripts/make_env_from_settings.py -e prod
 
 
 # 启动命令
