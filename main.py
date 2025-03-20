@@ -4,13 +4,13 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.logger import logger
 from starlette.staticfiles import StaticFiles
 from os.path import dirname, join
 
 from config import settings
 from schemas.common import FailResponse, EResponseCode
 from routes import register_routes
+from utils.logger import logger
 from utils.errors import get_response_mapper
 
 app = FastAPI(

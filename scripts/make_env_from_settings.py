@@ -31,7 +31,7 @@ def generate_dotenv(settings: BaseSettings, settings_class: BaseSettings) -> str
         if value is None or value is CHANGE_THIS:
             lines.append(f'{field_name}=')
         else:
-            lines.append(f'{field_name}={json.dumps(value)}')
+            lines.append(f'{field_name}={json.dumps(value, ensure_ascii=False)}')
         lines.append('')
 
     return '\n'.join(lines)
@@ -56,13 +56,14 @@ def main(args: List[str] = None):
         if check_env_exists(env_file) and '-f' not in args:
             print(f'[~] 已经存在 .env: {env_file}', '可使用 -f 强制生成')
             return
-    try:
-        settings = get_settings()
-    except ValidationError:
-        settings = None
     for env_file in env_files:
+        cls = get_settings_class(basename(env_file)[5:])
+        try:
+            settings = cls()
+        except ValidationError:
+            settings = None
         with open(env_file, 'w', encoding='utf8') as ef:
-            ef.write(generate_dotenv(settings, get_settings_class(basename(env_file)[5:])))
+            ef.write(generate_dotenv(settings, cls))
             print(f'[+] 已生成 .env 文件: {env_file}')
 
 
